@@ -1,0 +1,25 @@
+#配置私和环境变量，
+USER_INCLUDES=
+USER_LIBS=
+USER_LIBS_DIR=
+USER_CFLAGS=
+
+#以上为使用者可配置变量
+##################################################################################
+
+
+USER_CFLAGS += $(addprefix -L,$(USER_LIBS_DIR))  $(addprefix -I, $(USER_INCLUDES))  $(addprefix -l,$(USER_LIBS)) 
+
+
+#在生成.o时不需要连接动态库
+#LIBS = pthread kfpubs
+DEST = $(notdir  $(shell pwd))
+
+all:$(DEST) ECHO
+
+$(DEST):
+	$(CC) -o $(BIN_DIR)/$@ $(OBJS_DIR)/*.o ./*.o $(CFLAGS) $(USER_CFLAGS)  $(addprefix -l,$(LIBS)) -Wl,-rpath=$(LIB_DIR) -Wl,-rpath=$(OBJS_LIB_DIR)
+
+#输出提示信息
+ECHO:
+	@echo "into dir:[`pwd`] exec make BIN finish"

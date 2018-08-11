@@ -1,0 +1,43 @@
+%YAML 1.1
+---
+
+
+#数据库连接池配置
+#DBCONN: DRIVER={SQL Server};SERVER=(local);UID=sa;PWD=in2002fa;DATABASE=TPOSDB;
+DBServer:
+##############mysql ####################
+    DBHost: 10.210.113.53
+    DBUser: root
+    DBPassWord: 123456
+    DBName: test
+    DBPort: 3306     #3306
+    DBSocket:
+##########################################
+
+############## oracle #####################
+#    DBHost: 192.168.1.203
+#    DBUser: tposdb-user
+#    DBPassWord: 123456789
+#    DBName: tposdb
+#    DBPort:      #3306 oracle 不用配置
+#    DBSocket:    #oracle 不用配置
+##########################################
+
+    
+    SUPPORTDBPOOL: 0
+    MINCONNNUM: 20
+    MAXCONNNUM: 100
+    MINIDLECONNNUM: 5
+
+
+#socket info
+# ==================================================
+MaxConnNum: 1 #线程个数
+TimeOut: 180 #线程连接sleep时间，超时结束，单位秒
+RootURL: http://www.126.com/
+UrlFilter: mailto:|.css|.xml|.ico|.jpg|.gif|javascript:|+ #在url中包含配置中内容不进行下载页面，多个项用　｜　分割
+
+SYSTEM:
+    LOGDIR: /home/workspace/newiuplog
+    OUTPUTDIR: /home/workspace/html
+    OUTPUT-FINISH-FLAG: ctr

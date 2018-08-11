@@ -1,0 +1,24 @@
+#子目录的Makefile直接读取其子目录就行
+SUBDIRS=$(shell ls -l | grep ^d | awk '{print $$9}')
+#以下同根目录下的makefile的相同代码的解释
+CUR_SOURCE=${wildcard *.$(PS)}
+CUR_OBJS=${patsubst %.$(PS), %.o, $(CUR_SOURCE)}
+
+#在生成.o时不需要连接动态库
+#LIBS = pthread kfpubs
+#DEST=$(notdir  $(shell pwd))
+
+all:$(SUBDIRS) $(CUR_OBJS) 
+$(SUBDIRS):ECHO
+	make -C $@
+$(CUR_OBJS):%.o:%.$(PS)
+ifeq ($(DEST), )
+	$(CC)  $(CFLAGS) -c $^ -o $(OBJS_DIR)/$@
+else
+	@mkdir -p $(OBJS_DIR)/$(DEST)
+	$(CC)  $(CFLAGS) -c $^ -o $(OBJS_DIR)/$(DEST)/$@
+	@rm -rf $(OBJS_DIR)/$(DEST)/makefile
+	@cp makefile-* $(OBJS_DIR)/$(DEST)/makefile
+endif
+ECHO:
+	@echo $(SUBDIRS)

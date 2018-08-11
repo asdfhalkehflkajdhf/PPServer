@@ -1,0 +1,9 @@
+OBJS=*.o
+ODIR=obj
+
+#根据当前目录添加自己的库
+LIBS = pthread
+
+
+$(ROOT_DIR)/$(BIN_DIR)/$(BIN):$(ODIR)/$(OBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(addprefix -l,$(LIBS))

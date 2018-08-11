@@ -1,0 +1,40 @@
+#----------------------configure in this part
+PS = c
+CC = gcc 
+CFLAGS = -g -Wall
+DEST := 
+LIBS := pthread
+DEST_LIB := libconf
+INCLUDES :=  
+SUB_DIR := yaml
+DEST_DIR := 
+INSTALL := /usr/local/bin
+
+#----------------------do nothing in this part
+RM := rm -f
+CFLAGS  += -MMD -MF $(patsubst ./%, %, $(patsubst %.o, %.d, $(dir $@).$(notdir $@))) $(addprefix -I, $(INCLUDES))
+SRCS := $(wildcard *.$(PS) $(addsuffix /*.$(PS), $(SUB_DIR)))
+OBJS := $(patsubst %.$(PS), %.o, $(SRCS))
+DEPS := $(patsubst %.$(PS), %.d, $(foreach n,$(SRCS),$(patsubst ./%, %, $(dir $n).$(notdir $n))))
+MISS := $(filter-out $(wildcard DEPS), $(DEPS))
+
+all: $(DEST) $(DEST_LIB)
+
+clean :
+	@$(RM) $(OBJS) 
+	@$(RM) $(DEPS) 
+	@$(RM) $(DEST)
+	@$(RM) $(DEST_LIB)*
+	
+ifneq ($(MISS),)
+$(MISS):
+	@$(RM) $(patsubst %.d, %.o, $(dir $@)$(patsubst .%,%, $(notdir $@)))
+endif
+
+-include $(DEPS)
+
+$(DEST): $(OBJS)
+	$(CC) -o $(DEST) $(OBJS) $(addprefix -l,$(LIBS))
+$(DEST_LIB): $(OBJS)
+	$(CC) -fPIC -shared -o $(DEST_LIB).so $(SRCS) $(addprefix -l,$(LIBS))
+	@ar -r $(DEST_LIB).a $(OBJS)
